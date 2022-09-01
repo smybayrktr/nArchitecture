@@ -14,7 +14,8 @@ namespace Application.Features.someFeature.Commands.CreateSomeFeature
 {
     public class CreateSomeFeatureEntityCommand : IRequest<CreatedSomeFeatureEntityDto>
     {
-        public string Name { get; set; }
+        public string Name { get; set; } //Apiden command nesnesi içinde Name alanı yollıycaz. İhtiyacın olan fieldlar yazılır
+        //Handler commandı kontrol altında tutar.
         public class CreateSomeFeatureEntityCommandHandler : IRequestHandler<CreateSomeFeatureEntityCommand, CreatedSomeFeatureEntityDto>
         {
             private readonly ISomeFeatureEntityRepository _someFeatureEntityRepository;
@@ -32,11 +33,10 @@ namespace Application.Features.someFeature.Commands.CreateSomeFeature
             public async Task<CreatedSomeFeatureEntityDto> Handle(CreateSomeFeatureEntityCommand request, CancellationToken cancellationToken)
             {
                 await _someFeatureEntityBusinessRules.SomeFeatureEntityNameCanNotBeDuplicatedWhenInserted(request.Name);
-
                 SomeFeatureEntity mappedSomeFeatureEntity = _mapper.Map<SomeFeatureEntity>(request);
                 SomeFeatureEntity createdSomeFeatureEntity = await _someFeatureEntityRepository.AddAsync(mappedSomeFeatureEntity);
                 CreatedSomeFeatureEntityDto createdSomeFeatureEntityDto = _mapper.Map<CreatedSomeFeatureEntityDto>(createdSomeFeatureEntity);
-                return createdSomeFeatureEntityDto;
+                return createdSomeFeatureEntityDto; //Veritabanından belli bir alanı döndürdük sadece 
             }
         }
     }
